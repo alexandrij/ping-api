@@ -2,39 +2,18 @@ package service
 
 import (
 	"context"
-	"ping-api/pkg/elibrary"
-	"time"
+	"github.com/Alexandrij/ping-api/pkg/article"
+	"github.com/Alexandrij/ping-api/pkg/arxiv"
+	"github.com/Alexandrij/ping-api/pkg/elibrary"
 )
 
-// Article представляет научную статью
-type Article struct {
-	ID          string    `json:"id"`
-	Title       string    `json:"title"`
-	Authors     []string  `json:"authors"`
-	Abstract    string    `json:"abstract"`
-	Publication string    `json:"publication"`
-	Volume      string    `json:"volume,omitempty"`
-	Date        time.Time `json:"date"`
-	DOI         string    `json:"doi,omitempty"`
-	URL         string    `json:"url"`
-	Source      string    `json:"source"` // "elibrary" или "arxiv"
-}
+type Article = article.Article
 
 // SearchRequest запрос для поиска статей
-type SearchRequest struct {
-	Query    string `json:"query"`
-	Page     int    `json:"page"`
-	PageSize int    `json:"page_size"`
-	Source   string `json:"source"` // "elibrary", "arxiv" или "all"
-}
+type SearchRequest = article.SearchRequest
 
 // SearchResult результат поиска статей
-type SearchResult struct {
-	Articles []Article `json:"articles"`
-	Total    int       `json:"total"`
-	Page     int       `json:"page"`
-	PageSize int       `json:"page_size"`
-}
+type SearchResult = article.SearchResult
 
 // Service интерфейс для работы со статьями
 type Service interface {
@@ -43,16 +22,16 @@ type Service interface {
 }
 
 // NewService создает новый сервис для работы со статьями
-func NewService(elibraryKey, arxivEndpoint string) Service {
+func NewArticleService(elibraryKey, arxivEndpoint string) Service {
 	return &service{
-		elibrary: elibrary.NewELibraryS(elibraryKey),
-		arxiv:    NewArxivService(arxivEndpoint),
+		elibrary: elibrary.NewELibraryService(elibraryKey),
+		arxiv:    arxiv.NewArxivService(arxivEndpoint),
 	}
 }
 
 type service struct {
-	elibrary ELibraryService
-	arxiv    ArxivService
+	elibrary elibrary.ELibraryService
+	arxiv    arxiv.ArxivService
 }
 
 func (s *service) SearchArticles(ctx context.Context, req SearchRequest) (*SearchResult, error) {

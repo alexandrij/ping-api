@@ -2,20 +2,19 @@ package handler
 
 import (
 	"encoding/json"
+	"github.com/Alexandrij/ping-api/internal/service"
+	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
-
-	"github.com/gorilla/mux"
-	"ping-api/pkg/article"
 )
 
 // ArticleHandler структура для обработчика статей
 type ArticleHandler struct {
-	service article.Service
+	service service.Service
 }
 
 // NewArticleHandler создает новый экземпляр обработчика статей
-func NewArticleHandler(service article.Service) *ArticleHandler {
+func NewArticleHandler(service service.Service) *ArticleHandler {
 	return &ArticleHandler{
 		service: service,
 	}
@@ -29,7 +28,7 @@ func (h *ArticleHandler) SearchArticles(w http.ResponseWriter, r *http.Request) 
 	pageSize, _ := strconv.Atoi(r.URL.Query().Get("page_size"))
 	source := r.URL.Query().Get("source")
 
-	req := article.SearchRequest{
+	req := service.SearchRequest{
 		Query:    query,
 		Page:     page,
 		PageSize: pageSize,

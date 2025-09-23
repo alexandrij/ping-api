@@ -2,13 +2,12 @@ package app
 
 import (
 	"fmt"
+	"github.com/Alexandrij/ping-api/config"
+	"github.com/Alexandrij/ping-api/internal/handler"
+	"github.com/Alexandrij/ping-api/pkg/logger"
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 	"net/http"
-	"os"
-	"ping-api/config"
-	"ping-api/internal/handler"
-	"ping-api/pkg/logger"
 )
 
 func init() {
@@ -24,16 +23,8 @@ func Run() error {
 		return err
 	}
 
-	// Получаем конфигурацию из переменных окружения
-	elibraryKey := os.Getenv("ELIBRARY_API_KEY")
-	arxivEndpoint := os.Getenv("ARXIV_API_ENDPOINT")
-
-	if arxivEndpoint == "" {
-		arxivEndpoint = "http://export.arxiv.org/api/query"
-	}
-
 	// Создаем обработчики
-	h := handler.NewHandler(cfg.Api.Elibrary.ApiKey, arxivEndpoint)
+	h := handler.NewHandler(cfg.Api)
 
 	// Создаем маршрутизатор
 	router := mux.NewRouter()

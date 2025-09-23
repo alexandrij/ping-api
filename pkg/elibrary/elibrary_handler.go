@@ -1,11 +1,11 @@
-package handler
+package elibrary
 
 import (
 	"encoding/json"
+	"github.com/Alexandrij/ping-api/pkg/logger"
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 	"net/http"
-	"ping-api/pkg/logger"
 	"strconv"
 )
 

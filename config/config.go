@@ -2,9 +2,9 @@ package config
 
 import (
 	"fmt"
+	"github.com/Alexandrij/ping-api/pkg/logger"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
-	"ping-api/pkg/logger"
 )
 
 type (
@@ -43,8 +43,13 @@ func Load() (*Config, error) {
 	viper.AutomaticEnv()
 
 	// Установка приоритета для локальных значений из .env
-	viper.SetConfigName("local")
-	viper.MergeInConfig() // Объединяем с основной конфигурацией
+	viper.SetConfigName("app")
+	// Объединяем с основной конфигурацией
+
+	if err := viper.MergeInConfig(); err != nil {
+		logger.Error("Error reading config file", zap.Error(err))
+		return nil, fmt.Errorf("error reading config file: %w", err)
+	}
 
 	if err := viper.ReadInConfig(); err != nil {
 		logger.Error("Error reading config file", zap.Error(err))
@@ -65,6 +70,8 @@ func Load() (*Config, error) {
 			},
 		},
 	}
+
+	logger.Info("Config loaded", zap.Any("config", config))
 
 	return config, nil
 }

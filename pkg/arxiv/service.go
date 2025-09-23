@@ -1,4 +1,4 @@
-package article
+package arxiv
 
 import (
 	"context"

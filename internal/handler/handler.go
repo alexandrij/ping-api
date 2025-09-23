@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"ping-api/pkg/article"
-
+	"github.com/Alexandrij/ping-api/config"
+	"github.com/Alexandrij/ping-api/internal/service"
 	"github.com/gorilla/mux"
 )
 
@@ -13,9 +13,9 @@ type Handler struct {
 }
 
 // NewHandler создает новый экземпляр Handler
-func NewHandler(elibraryKey, arxivEndpoint string) *Handler {
+func NewHandler(cfg config.ApiConfig) *Handler {
 	// Создаем сервис для работы со статьями
-	articleService := article.NewService(elibraryKey, arxivEndpoint)
+	articleService := service.NewArticleService(cfg.Elibrary.ApiKey, cfg.Arxiv.Endpoint)
 
 	return &Handler{
 		ArticleHandler: NewArticleHandler(articleService),

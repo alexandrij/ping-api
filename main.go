@@ -1,8 +1,8 @@
 package main
 
 import (
+	"github.com/Alexandrij/ping-api/cmd/app"
 	"log"
-	"ping-api/cmd/app"
 )
 
 func main() {
