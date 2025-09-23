@@ -1,0 +1,9 @@
+server:
+  host: "localhost"
+  port: "8080"
+
+api:
+  elibrary:
+    apiKey: "your_elibrary_api_key"
+  arxiv:
+    endpoint: "http://export.arxiv.org/api/query"
