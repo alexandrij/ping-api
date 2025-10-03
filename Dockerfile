@@ -1,10 +1,26 @@
-FROM golang:1.24.6-alpine AS builder
+FROM golang:1.24.6 AS builder
+
 WORKDIR /build
-COPY go.mod .
-COPY go.sum .
+
+COPY go.mod go.mod
+COPY go.sum go.sum
+
 RUN go mod download
-COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o /main main.go
+
+COPY main.go main.go
+COPY configs/ configs/
+COPY cmd/ cmd/
+COPY config/ config/
+COPY internal/ internal/
+COPY pkg/ pkg/
+
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o bin/ping-api main.go
+
 FROM alpine:latest
-COPY --from=builder main /bin/main
-ENTRYPOINT ["/bin/main"]
+
+WORKDIR /
+
+COPY --from=builder /build/bin/ping-api /ping-api/bin/ping-api
+COPY --from=builder /build/configs/app.yml /ping-api/configs/app.yml
+
+ENTRYPOINT ["/bin/ping-api"]

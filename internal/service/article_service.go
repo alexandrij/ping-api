@@ -15,6 +15,11 @@ type SearchRequest = article.SearchRequest
 // SearchResult результат поиска статей
 type SearchResult = article.SearchResult
 
+type ServiceConfig struct {
+	Elibrary elibrary.Profile
+	Arxiv    string
+}
+
 // Service интерфейс для работы со статьями
 type Service interface {
 	SearchArticles(ctx context.Context, req SearchRequest) (*SearchResult, error)
@@ -22,10 +27,10 @@ type Service interface {
 }
 
 // NewService создает новый сервис для работы со статьями
-func NewArticleService(elibraryKey, arxivEndpoint string) Service {
+func NewArticleService(cfg ServiceConfig) Service {
 	return &service{
-		elibrary: elibrary.NewELibraryService(elibraryKey),
-		arxiv:    arxiv.NewArxivService(arxivEndpoint),
+		elibrary: elibrary.NewELibraryService(cfg.Elibrary),
+		arxiv:    arxiv.NewArxivService(cfg.Arxiv),
 	}
 }
 

@@ -19,7 +19,8 @@ type (
 	}
 
 	ElibraryConfig struct {
-		ApiKey string
+		GUID   string
+		UserID string
 	}
 
 	ArxivConfig struct {
@@ -63,7 +64,8 @@ func Load() (*Config, error) {
 		},
 		Api: ApiConfig{
 			Elibrary: ElibraryConfig{
-				ApiKey: viper.GetString("api.elibrary.apiKey"),
+				GUID:   viper.GetString("api.elibrary.guid"),
+				UserID: viper.GetString("api.elibrary.userId"),
 			},
 			Arxiv: ArxivConfig{
 				Endpoint: viper.GetString("api.arxiv.endpoint"),

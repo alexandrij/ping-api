@@ -4,6 +4,7 @@ server:
 
 api:
   elibrary:
-    apiKey: "your_elibrary_api_key"
+    giud: "your_elibrary_guid"
+    userId: "your_elibrary_user_id"
   arxiv:
     endpoint: "http://export.arxiv.org/api/query"

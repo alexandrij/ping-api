@@ -10,3 +10,8 @@ type SearchResult = article.SearchResult
 type Service interface {
 	article.Service
 }
+
+type Profile struct {
+	GUID   string
+	UserID string
+}

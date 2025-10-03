@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/Alexandrij/ping-api/config"
 	"github.com/Alexandrij/ping-api/internal/service"
+	"github.com/Alexandrij/ping-api/pkg/elibrary"
 	"github.com/gorilla/mux"
 )
 
@@ -15,7 +16,10 @@ type Handler struct {
 // NewHandler создает новый экземпляр Handler
 func NewHandler(cfg config.ApiConfig) *Handler {
 	// Создаем сервис для работы со статьями
-	articleService := service.NewArticleService(cfg.Elibrary.ApiKey, cfg.Arxiv.Endpoint)
+	articleService := service.NewArticleService(service.ServiceConfig{
+		Elibrary: elibrary.Profile(cfg.Elibrary),
+		Arxiv:    cfg.Arxiv.Endpoint,
+	})
 
 	return &Handler{
 		ArticleHandler: NewArticleHandler(articleService),
