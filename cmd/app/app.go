@@ -38,5 +38,7 @@ func Run() error {
 		zap.String("host", cfg.Server.Host),
 		zap.String("port", cfg.Server.Port))
 
+	fmt.Printf("Server started at http://%s\n", addr)
+
 	return http.ListenAndServe(addr, router)
 }
