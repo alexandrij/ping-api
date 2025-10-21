@@ -60,7 +60,7 @@ func ApplyHeaders(r *http.Request) *http.Request {
 	// Добавляем headers из конфигурации
 	// Устанавливаем заголовки
 	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	r.Header.Set("Referer", "https://www.elibrary.ru/querybox.asp?scope=infound")
+	r.Header.Set("Referer", "https://elibrary.ru/querybox.asp?scope=infound")
 	r.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
 
 	r = ApplyCookie(r)

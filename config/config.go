@@ -43,18 +43,17 @@ func Load() (*Config, error) {
 	// Автоматическая привязка переменных окружения
 	viper.AutomaticEnv()
 
-	// Установка приоритета для локальных значений из .env
-	viper.SetConfigName("app")
-	// Объединяем с основной конфигурацией
-
-	if err := viper.MergeInConfig(); err != nil {
+	// Читаем основную конфигурацию
+	if err := viper.ReadInConfig(); err != nil {
 		logger.Error("Error reading config file", zap.Error(err))
 		return nil, fmt.Errorf("error reading config file: %w", err)
 	}
 
-	if err := viper.ReadInConfig(); err != nil {
-		logger.Error("Error reading config file", zap.Error(err))
-		return nil, fmt.Errorf("error reading config file: %w", err)
+	// Если есть локальный файл (например, local.yml), объединяем его
+	viper.SetConfigName("local")
+	if err := viper.MergeInConfig(); err != nil {
+		// Локальный файл может отсутствовать — логируем, но не прерываем работу
+		logger.Debug("Local config file not found or failed to merge", zap.Error(err))
 	}
 
 	config := &Config{

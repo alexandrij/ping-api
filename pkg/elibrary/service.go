@@ -29,62 +29,6 @@ type elibraryService struct {
 }
 
 func (e *elibraryService) SearchArticles(ctx context.Context, searchReq SearchRequest) (*SearchResult, error) {
-	// Здесь должна быть реализация обращения к API elibrary.ru
-	// Для примера возвращаем заглушку
-
-	//fetch("https://www.elibrary.ru/query_results.asp",
-	//{
-	//	"headers": {
-	//	"content-type": "application/x-www-form-urlencoded",
-	//		"sec-ch-ua": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"YaBrowser\";v=\"25.8\", \"Yowser\";v=\"2.5\"",
-	//		"sec-ch-ua-mobile": "?0",
-	//		"sec-ch-ua-platform": "\"Linux\"",
-	//		"upgrade-insecure-requests": "1"
-	//},
-	//	"referrer": "https://www.elibrary.ru/querybox.asp?scope=infound",
-	//	"body": "querybox_name=&authors_all=&titles_all=&rubrics_all=&changed=0&queryid=&ftext=%D0%A1%D0%B5%D0%BD%D0%BD%D0%B0%D1%8F+%D0%BF%D0%B0%D0%BB%D0%BE%D1%87%D0%BA%D0%B0&where_name=on&where_abstract=on&where_fulltext=on&where_keywords=on&where_references=&type_article=on&type_disser=on&type_book=on&type_report=on&type_conf=on&type_patent=on&type_preprint=on&type_grant=on&type_dataset=on&search_itemboxid=&search_morph=on&search_results=on&begin_year=0&end_year=0&issues=all&orderby=rank&order=rev&queryboxid=0&save_queryboxid=0",
-	//	"method": "POST",
-	//	"mode": "cors",
-	//	"credentials": "omit"
-	//})
-	//
-	//fetch("https://www.elibrary.ru/query_results.asp",
-	//{
-	//	"headers": {
-	//	"content-type": "application/x-www-form-urlencoded",
-	//		"sec-ch-ua": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"YaBrowser\";v=\"25.8\", \"Yowser\";v=\"2.5\"",
-	//		"sec-ch-ua-mobile": "?0",
-	//		"sec-ch-ua-platform": "\"Linux\"",
-	//		"upgrade-insecure-requests": "1",
-	//		"Referer": "https://www.elibrary.ru/querybox.asp?scope=infound"
-	//},
-	//	"body": "querybox_name=&authors_all=&titles_all=&rubrics_all=&changed=0&queryid=&ftext=%D0%A1%D0%B5%D0%BD%D0%BD%D0%B0%D1%8F+%D0%BF%D0%B0%D0%BB%D0%BE%D1%87%D0%BA%D0%B0&where_name=on&where_abstract=on&where_fulltext=on&where_keywords=on&where_references=&type_article=on&type_disser=on&type_book=on&type_report=on&type_conf=on&type_patent=on&type_preprint=on&type_grant=on&type_dataset=on&search_itemboxid=&search_morph=on&search_results=on&begin_year=0&end_year=0&issues=all&orderby=rank&order=rev&queryboxid=0&save_queryboxid=0",
-	//	"method": "POST"
-	//})
-
-	//_ym_uid = 1757317899542484987
-	//_ym_d = 1757317899
-	//__utmz = 216042306.1757327149
-	//.2
-	//.2.utmcsr = elibrary.ru | utmccn=(referral) | utmcmd = referral | utmcct=/
-	//__utmc = 216042306
-	//SCookieGUID = F05511BB % 2
-	//DD1D8 % 2
-	//D4AC6 % 2
-	//DA4AA % 2
-	//D68AF81A83F3A
-	//SUserID = 631204980
-	//_ym_isad = 2
-	//__utma = 216042306.1664554439
-	//.1757317903
-	//.1759327985
-	//.1759383774
-	//.11
-	//__utmt = 1
-	//__utmb = 216042306.4
-	//.10
-	//.1759383774
-
 	client := &http.Client{}
 
 	data := url.Values{
@@ -119,10 +63,10 @@ func (e *elibraryService) SearchArticles(ctx context.Context, searchReq SearchRe
 		"orderby":           []string{"rank"},
 		"order":             []string{"rev"},
 		"changed":           []string{"1"},
-		"ftext":             []string{"концепция+общественной+безопасности"},
+		"ftext":             []string{"компьютерное зрение"},
 	}
 
-	req, err := http.NewRequest("POST", "https://www.elibrary.ru/query_results.asp", strings.NewReader(data.Encode()))
+	req, err := http.NewRequest("POST", "https://elibrary.ru/query_results.asp", strings.NewReader(data.Encode()))
 
 	if err != nil {
 		logger.Error(err.Error())
@@ -130,13 +74,12 @@ func (e *elibraryService) SearchArticles(ctx context.Context, searchReq SearchRe
 	}
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("Referer", "https://www.elibrary.ru/querybox.asp?scope=infound")
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 YaBrowser/25.8.0.0 Safari/537.36")
 
 	req.AddCookie(&http.Cookie{Name: "SCookieGUID", Value: e.GUID})
 	req.AddCookie(&http.Cookie{Name: "SUserID", Value: e.UserID})
 
-	logger.Debug(req.URL.String(), zap.String("query", data.Encode()))
+	logger.Debug(req.URL.String(), zap.String("query", data.Encode()), zap.String("cookies", req.Header.Get("Cookie")))
 
 	resp, err := client.Do(req)
 
